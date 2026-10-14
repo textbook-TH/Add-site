@@ -212,8 +212,9 @@
       modal.classList.remove('hidden');
     }
 
-    function closeAlertModal() {
+    async function closeAlertModal() {
       document.getElementById('custom-alert-modal').classList.add('hidden');
+      await loadDataFromSupabase();
     }
 
     async function checkAuth() {
@@ -286,21 +287,21 @@
         }
         if (!c) c = data;
 
-        document.getElementById('admin-logo-url').value = c.logoUrl || '';
-        document.getElementById('admin-logo-text').value = c.logoText || '';
-        document.getElementById('admin-big-title').value = c.heroBigTitle || '';
-        document.getElementById('admin-subtext').value = c.heroSubtext || '';
-        document.getElementById('admin-img-url').value = c.heroImgUrl || '';
-        document.getElementById('admin-bottom-title').value = c.heroBottomTitle || '';
-        document.getElementById('admin-desc-left').value = c.heroDescLeft || '';
+        if (document.getElementById('admin-logo-url')) document.getElementById('admin-logo-url').value = c.logoUrl || '';
+        if (document.getElementById('admin-logo-text')) document.getElementById('admin-logo-text').value = c.logoText || '';
+        if (document.getElementById('admin-big-title')) document.getElementById('admin-big-title').value = c.heroBigTitle || '';
+        if (document.getElementById('admin-subtext')) document.getElementById('admin-subtext').value = c.heroSubtext || '';
+        if (document.getElementById('admin-img-url')) document.getElementById('admin-img-url').value = c.heroImgUrl || '';
+        if (document.getElementById('admin-bottom-title')) document.getElementById('admin-bottom-title').value = c.heroBottomTitle || '';
+        if (document.getElementById('admin-desc-left')) document.getElementById('admin-desc-left').value = c.heroDescLeft || '';
 
-        document.getElementById('admin-about-title').value = c.aboutTitle || '';
-        document.getElementById('admin-about-subtitle').value = c.aboutSubtitle || '';
-        document.getElementById('admin-about-1').value = c.aboutText1 || '';
-        document.getElementById('admin-about-2').value = c.aboutText2 || '';
+        if (document.getElementById('admin-about-title')) document.getElementById('admin-about-title').value = c.aboutTitle || '';
+        if (document.getElementById('admin-about-subtitle')) document.getElementById('admin-about-subtitle').value = c.aboutSubtitle || '';
+        if (document.getElementById('admin-about-1')) document.getElementById('admin-about-1').value = c.aboutText1 || '';
+        if (document.getElementById('admin-about-2')) document.getElementById('admin-about-2').value = c.aboutText2 || '';
 
-        document.getElementById('admin-system-title').value = c.systemTitle || '';
-        document.getElementById('admin-system-subtitle').value = c.systemSubtitle || '';
+        if (document.getElementById('admin-system-title')) document.getElementById('admin-system-title').value = c.systemTitle || '';
+        if (document.getElementById('admin-system-subtitle')) document.getElementById('admin-system-subtitle').value = c.systemSubtitle || '';
 
         navMenuItems = Array.isArray(c.navMenuItems) ? c.navMenuItems : [];
         systemCards = Array.isArray(c.systemCards) ? c.systemCards : [];
@@ -425,35 +426,46 @@
       syncFooterInputs();
 
       const updatedPayload = {
-        logoUrl: document.getElementById('admin-logo-url').value || '',
-        logoText: document.getElementById('admin-logo-text').value || '',
+        logoUrl: document.getElementById('admin-logo-url')?.value || '',
+        logoText: document.getElementById('admin-logo-text')?.value || '',
         navMenuItems: navMenuItems,
-        heroBigTitle: document.getElementById('admin-big-title').value || '',
-        heroSubtext: document.getElementById('admin-subtext').value || '',
-        heroImgUrl: document.getElementById('admin-img-url').value || '',
-        heroBottomTitle: document.getElementById('admin-bottom-title').value || '',
-        heroDescLeft: document.getElementById('admin-desc-left').value || '',
-        aboutTitle: document.getElementById('admin-about-title').value || '',
-        aboutSubtitle: document.getElementById('admin-about-subtitle').value || '',
-        aboutText1: document.getElementById('admin-about-1').value || '',
-        aboutText2: document.getElementById('admin-about-2').value || '',
-        systemTitle: document.getElementById('admin-system-title').value || '',
-        systemSubtitle: document.getElementById('admin-system-subtitle').value || '',
+        heroBigTitle: document.getElementById('admin-big-title')?.value || '',
+        heroSubtext: document.getElementById('admin-subtext')?.value || '',
+        heroImgUrl: document.getElementById('admin-img-url')?.value || '',
+        heroBottomTitle: document.getElementById('admin-bottom-title')?.value || '',
+        heroDescLeft: document.getElementById('admin-desc-left')?.value || '',
+        aboutTitle: document.getElementById('admin-about-title')?.value || '',
+        aboutSubtitle: document.getElementById('admin-about-subtitle')?.value || '',
+        aboutText1: document.getElementById('admin-about-1')?.value || '',
+        aboutText2: document.getElementById('admin-about-2')?.value || '',
+        systemTitle: document.getElementById('admin-system-title')?.value || '',
+        systemSubtitle: document.getElementById('admin-system-subtitle')?.value || '',
         systemCards: systemCards,
         footerLinks: footerLinks
       };
 
+      const saveBtn = document.querySelector("button[onclick='saveAdminChanges()']");
+
       try {
-        const { error } = await supabaseClient
+        if (saveBtn) saveBtn.disabled = true;
+
+        const { data, error } = await supabaseClient
           .from('site_config')
-          .upsert({ id: 1, content: updatedPayload }, { onConflict: 'id' });
+          .upsert({ id: 1, content: updatedPayload }, { onConflict: 'id' })
+          .select();
+
+        if (saveBtn) saveBtn.disabled = false;
 
         if (error) {
           showAlertModal('เกิดข้อผิดพลาด!', 'เกิดปัญหาในการบันทึกข้อมูล: ' + error.message, false);
+        } else if (!data || data.length === 0) {
+          showAlertModal('เกิดข้อผิดพลาด!', 'ไม่สามารถบันทึกข้อมูลได้ กรุณาตรวจสอบสิทธิ์การอัปเดต (RLS) ใน Supabase', false);
         } else {
+          await loadDataFromSupabase();
           showAlertModal('บันทึกสำเร็จ!', 'อัปเดตข้อมูลลง Supabase เรียบร้อยแล้ว หน้าเว็บหลักจะแสดงผลข้อมูลใหม่ทันที', true);
         }
       } catch (err) {
+        if (saveBtn) saveBtn.disabled = false;
         showAlertModal('เกิดข้อผิดพลาด!', 'เกิดปัญหาในการบันทึกข้อมูล: ' + (err.message || err), false);
       }
     }
