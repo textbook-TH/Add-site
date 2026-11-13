@@ -10,6 +10,7 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', 'Sarabun', sans-serif; background-color: #ECECEC; color: #000000; }
     .card-shadow { box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+    .drag-over-target { border-color: #000000 !important; border-style: dashed !important; background-color: #F3F4F6 !important; }
   </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 flex items-center justify-center">
@@ -45,7 +46,7 @@
         <h1 class="text-2xl font-black uppercase text-black mt-1">แผงจัดการและอัปเดตข้อมูลหน้าหลัก</h1>
       </div>
       <div class="flex items-center gap-3">
-        <a href="https://textbook-th.github.io/Official-site/" target="_blank" class="px-5 py-3 border border-gray-300 rounded-full text-xs font-bold tracking-wider uppercase hover:bg-black hover:text-white transition">👁️ ดูหน้าเว็บจริง</a>
+        <a href="https://textbook-th.github.io/Official-site/" target="_blank" rel="noopener noreferrer" class="px-5 py-3 border border-gray-300 rounded-full text-xs font-bold tracking-wider uppercase hover:bg-black hover:text-white transition">👁️ ดูหน้าเว็บจริง</a>
         <button id="btn-save-admin" onclick="saveAdminChanges(event)" class="px-6 py-3 bg-black text-white rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gray-800 transition shadow-lg">
           💾 บันทึกลง Supabase
         </button>
@@ -78,25 +79,25 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-600 mb-2">ข้อความชื่อใหญ่ (Big Title Text)</label>
-          <input type="text" id="admin-big-title" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm font-bold">
+          <input type="text" id="admin-big-title" oninput="saveDraftToLocal()" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm font-bold">
         </div>
         <div>
           <label class="block text-xs font-bold uppercase text-gray-600 mb-2">คำบรรยายสั้นใต้ชื่อใหญ่ (Subtext)</label>
-          <input type="text" id="admin-subtext" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm">
+          <input type="text" id="admin-subtext" oninput="saveDraftToLocal()" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm">
         </div>
       </div>
       <div>
         <label class="block text-xs font-bold uppercase text-gray-600 mb-2">🔗 ลิงก์รูปภาพตรงกลาง (Google Drive / Direct Image URL)</label>
-        <input type="text" id="admin-img-url" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm">
+        <input type="text" id="admin-img-url" oninput="saveDraftToLocal()" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm">
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-600 mb-2">หัวข้อสั้นด้านล่างรูปภาพ</label>
-          <input type="text" id="admin-bottom-title" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm font-bold">
+          <input type="text" id="admin-bottom-title" oninput="saveDraftToLocal()" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm font-bold">
         </div>
         <div>
           <label class="block text-xs font-bold uppercase text-gray-600 mb-2">คำอธิบายใต้รูปภาพ</label>
-          <textarea id="admin-desc-left" rows="2" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm"></textarea>
+          <textarea id="admin-desc-left" rows="2" oninput="saveDraftToLocal()" class="w-full px-4 py-3 bg-[#F9F9F9] border border-gray-200 rounded-xl text-sm"></textarea>
         </div>
       </div>
     </div>
@@ -108,12 +109,12 @@
         <h2 class="text-sm font-bold uppercase tracking-wider text-black">ABOUT THE PLATFORM</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" id="admin-about-title" placeholder="Main Title" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm font-bold border">
-        <input type="text" id="admin-about-subtitle" placeholder="Subtitle" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm font-bold border">
+        <input type="text" id="admin-about-title" oninput="saveDraftToLocal()" placeholder="Main Title" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm font-bold border">
+        <input type="text" id="admin-about-subtitle" oninput="saveDraftToLocal()" placeholder="Subtitle" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm font-bold border">
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <textarea id="admin-about-1" rows="4" placeholder="Left Text" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm border"></textarea>
-        <textarea id="admin-about-2" rows="4" placeholder="Right Text" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm border"></textarea>
+        <textarea id="admin-about-1" rows="4" oninput="saveDraftToLocal()" placeholder="Left Text" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm border"></textarea>
+        <textarea id="admin-about-2" rows="4" oninput="saveDraftToLocal()" placeholder="Right Text" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm border"></textarea>
       </div>
     </div>
 
@@ -127,8 +128,8 @@
         <button onclick="addNewCard()" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold tracking-wider hover:bg-emerald-700 transition">+ เพิ่มการ์ดใหม่</button>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" id="admin-system-title" placeholder="System Title" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm font-bold border">
-        <input type="text" id="admin-system-subtitle" placeholder="System Subtitle" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm border">
+        <input type="text" id="admin-system-title" oninput="saveDraftToLocal()" placeholder="System Title" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm font-bold border">
+        <input type="text" id="admin-system-subtitle" oninput="saveDraftToLocal()" placeholder="System Subtitle" class="px-4 py-3 bg-[#F9F9F9] rounded-xl text-sm border">
       </div>
       <div id="admin-cards-list" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2"></div>
     </div>
@@ -173,13 +174,16 @@
       }
     });
 
-    window.addEventListener('beforeunload', () => {
-      supabaseClient.auth.signOut();
-    });
+    const DRAFT_STORAGE_KEY = 'textbook_admin_unsaved_draft_v1';
+    let isInitialDataLoaded = false;
 
     let navMenuItems = [];
     let systemCards = [];
     let footerLinks = [];
+
+    // ตัวแปรสำหรับจัดลำดับการลากวาง (Drag & Drop)
+    let draggedNavIndex = null;
+    let draggedCardIndex = null;
 
     function escapeHtml(str) {
       if (str === null || str === undefined) return '';
@@ -216,31 +220,109 @@
       document.getElementById('custom-alert-modal').classList.add('hidden');
     }
 
+    // สร้าง Object ข้อมูลปัจจุบันทั้งหมดจากหน้าจอ
+    function collectCurrentPayload() {
+      syncNavMenuInputs();
+      syncCardInputs();
+      syncFooterInputs();
+
+      return {
+        logoUrl: document.getElementById('admin-logo-url').value || '',
+        logoText: document.getElementById('admin-logo-text').value || '',
+        navMenuItems: navMenuItems,
+        heroBigTitle: document.getElementById('admin-big-title').value || '',
+        heroSubtext: document.getElementById('admin-subtext').value || '',
+        heroImgUrl: document.getElementById('admin-img-url').value || '',
+        heroBottomTitle: document.getElementById('admin-bottom-title').value || '',
+        heroDescLeft: document.getElementById('admin-desc-left').value || '',
+        aboutTitle: document.getElementById('admin-about-title').value || '',
+        aboutSubtitle: document.getElementById('admin-about-subtitle').value || '',
+        aboutText1: document.getElementById('admin-about-1').value || '',
+        aboutText2: document.getElementById('admin-about-2').value || '',
+        systemTitle: document.getElementById('admin-system-title').value || '',
+        systemSubtitle: document.getElementById('admin-system-subtitle').value || '',
+        systemCards: systemCards,
+        footerLinks: footerLinks
+      };
+    }
+
+    // นำข้อมูลไปแสดงลงในฟอร์มทั้งหมด
+    function applyPayloadToForm(c) {
+      if (!c) return;
+      document.getElementById('admin-logo-url').value = c.logoUrl || '';
+      document.getElementById('admin-logo-text').value = c.logoText || '';
+      document.getElementById('admin-big-title').value = c.heroBigTitle || '';
+      document.getElementById('admin-subtext').value = c.heroSubtext || '';
+      document.getElementById('admin-img-url').value = c.heroImgUrl || '';
+      document.getElementById('admin-bottom-title').value = c.heroBottomTitle || '';
+      document.getElementById('admin-desc-left').value = c.heroDescLeft || '';
+
+      document.getElementById('admin-about-title').value = c.aboutTitle || '';
+      document.getElementById('admin-about-subtitle').value = c.aboutSubtitle || '';
+      document.getElementById('admin-about-1').value = c.aboutText1 || '';
+      document.getElementById('admin-about-2').value = c.aboutText2 || '';
+
+      document.getElementById('admin-system-title').value = c.systemTitle || '';
+      document.getElementById('admin-system-subtitle').value = c.systemSubtitle || '';
+
+      navMenuItems = Array.isArray(c.navMenuItems) ? c.navMenuItems : [];
+      systemCards = Array.isArray(c.systemCards) ? c.systemCards : [];
+      footerLinks = Array.isArray(c.footerLinks) ? c.footerLinks : [];
+
+      renderAdminNavMenu();
+      renderAdminCards();
+      renderAdminFooterLinks();
+    }
+
+    // บันทึก Draft ชั่วคราวอัตโนมัติป้องกันข้อมูลหายเมื่อสลับแท็บหรือเปิดหน้าอื่น
+    function saveDraftToLocal() {
+      if (!isInitialDataLoaded) return;
+      try {
+        const currentDraft = collectCurrentPayload();
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentDraft));
+      } catch (e) {
+        console.warn('Cannot save local draft:', e);
+      }
+    }
+
+    function clearLocalDraft() {
+      try {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+      } catch (e) {}
+    }
+
     async function checkAuth() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
         document.getElementById('login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
-        await loadDataFromSupabase();
+        if (!isInitialDataLoaded) {
+          await loadDataFromSupabase();
+        }
       } else {
+        isInitialDataLoaded = false;
         document.getElementById('login-box').classList.remove('hidden');
         document.getElementById('admin-dashboard').classList.add('hidden');
       }
     }
 
+    // ป้องกันการดึงข้อมูลเก่ามาเขียนทับฟอร์มเมื่อสลับแท็บกลับมา (Token Refresh)
     supabaseClient.auth.onAuthStateChange((event, session) => {
       if (session) {
         document.getElementById('login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
-        loadDataFromSupabase();
-      } else {
+        if (!isInitialDataLoaded) {
+          loadDataFromSupabase();
+        }
+      } else if (event === 'SIGNED_OUT') {
+        isInitialDataLoaded = false;
         document.getElementById('login-box').classList.remove('hidden');
         document.getElementById('admin-dashboard').classList.add('hidden');
       }
     });
 
     async function handleLogin() {
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
       const errorEl = document.getElementById('login-error');
 
@@ -256,17 +338,36 @@
         errorEl.classList.remove('hidden');
       } else {
         errorEl.classList.add('hidden');
-        checkAuth();
+        await checkAuth();
       }
     }
 
     async function handleLogout() {
+      clearLocalDraft();
+      isInitialDataLoaded = false;
       await supabaseClient.auth.signOut();
       checkAuth();
     }
 
-    async function loadDataFromSupabase() {
+    async function loadDataFromSupabase(forceFromServer = false) {
       try {
+        // ตรวจสอบว่ามีข้อมูล Draft ที่ยังไม่ได้กดบันทึกค้างไว้หรือไม่ (กรณีเผลอปิดหน้าหรือรีเฟรช)
+        if (!forceFromServer) {
+          const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
+          if (savedDraft) {
+            try {
+              const parsedDraft = JSON.parse(savedDraft);
+              if (parsedDraft && typeof parsedDraft === 'object') {
+                applyPayloadToForm(parsedDraft);
+                isInitialDataLoaded = true;
+                return;
+              }
+            } catch (e) {
+              clearLocalDraft();
+            }
+          }
+        }
+
         const { data, error } = await supabaseClient
           .from('site_config')
           .select('*')
@@ -278,7 +379,10 @@
           return;
         }
 
-        if (!data) return;
+        if (!data) {
+          isInitialDataLoaded = true;
+          return;
+        }
 
         let c = data.content;
         if (typeof c === 'string') {
@@ -286,34 +390,16 @@
         }
         if (!c) c = data;
 
-        document.getElementById('admin-logo-url').value = c.logoUrl || '';
-        document.getElementById('admin-logo-text').value = c.logoText || '';
-        document.getElementById('admin-big-title').value = c.heroBigTitle || '';
-        document.getElementById('admin-subtext').value = c.heroSubtext || '';
-        document.getElementById('admin-img-url').value = c.heroImgUrl || '';
-        document.getElementById('admin-bottom-title').value = c.heroBottomTitle || '';
-        document.getElementById('admin-desc-left').value = c.heroDescLeft || '';
-
-        document.getElementById('admin-about-title').value = c.aboutTitle || '';
-        document.getElementById('admin-about-subtitle').value = c.aboutSubtitle || '';
-        document.getElementById('admin-about-1').value = c.aboutText1 || '';
-        document.getElementById('admin-about-2').value = c.aboutText2 || '';
-
-        document.getElementById('admin-system-title').value = c.systemTitle || '';
-        document.getElementById('admin-system-subtitle').value = c.systemSubtitle || '';
-
-        navMenuItems = Array.isArray(c.navMenuItems) ? c.navMenuItems : [];
-        systemCards = Array.isArray(c.systemCards) ? c.systemCards : [];
-        footerLinks = Array.isArray(c.footerLinks) ? c.footerLinks : [];
-
-        renderAdminNavMenu();
-        renderAdminCards();
-        renderAdminFooterLinks();
+        applyPayloadToForm(c);
+        isInitialDataLoaded = true;
       } catch (err) {
         console.error('Unexpected error loading data from Supabase:', err);
       }
     }
 
+    // ==========================================
+    // หัวข้อ 1: ลิงก์เมนูบาร์ (รองรับลากวางสลับ/แทรก)
+    // ==========================================
     function syncNavMenuInputs() {
       navMenuItems.forEach((item, idx) => {
         const labelEl = document.getElementById(`admin-nav-label-${idx}`);
@@ -323,12 +409,58 @@
       });
     }
 
+    function handleNavDragStart(event, idx) {
+      if (['INPUT', 'TEXTAREA', 'BUTTON'].includes(event.target.tagName)) {
+        event.preventDefault();
+        return;
+      }
+      draggedNavIndex = idx;
+      event.dataTransfer.effectAllowed = 'move';
+      event.currentTarget.classList.add('opacity-50');
+    }
+
+    function handleNavDragOver(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      event.currentTarget.classList.add('drag-over-target');
+    }
+
+    function handleNavDragLeave(event) {
+      event.currentTarget.classList.remove('drag-over-target');
+    }
+
+    function handleNavDrop(event, targetIdx) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('drag-over-target');
+      if (draggedNavIndex === null || draggedNavIndex === targetIdx) return;
+
+      syncNavMenuInputs();
+      const [movedItem] = navMenuItems.splice(draggedNavIndex, 1);
+      navMenuItems.splice(targetIdx, 0, movedItem);
+      draggedNavIndex = null;
+
+      renderAdminNavMenu();
+      saveDraftToLocal();
+    }
+
+    function handleNavDragEnd(event) {
+      event.currentTarget.classList.remove('opacity-50');
+      draggedNavIndex = null;
+    }
+
     function renderAdminNavMenu() {
       document.getElementById('admin-nav-menu-list').innerHTML = navMenuItems.map((item, idx) => `
-        <div class="flex items-center gap-3 p-3 bg-[#F9F9F9] rounded-2xl border">
-          <input type="text" id="admin-nav-label-${idx}" value="${escapeHtml(item.label)}" class="w-1/3 p-2 bg-white rounded-xl text-xs font-bold border">
-          <input type="text" id="admin-nav-url-${idx}" value="${escapeHtml(item.url)}" class="w-2/3 p-2 bg-white rounded-xl text-xs border">
-          <button onclick="removeNavMenu(${idx})" class="text-red-500 font-bold text-xs">✕ ลบ</button>
+        <div draggable="true"
+             ondragstart="handleNavDragStart(event, ${idx})"
+             ondragover="handleNavDragOver(event)"
+             ondragleave="handleNavDragLeave(event)"
+             ondrop="handleNavDrop(event, ${idx})"
+             ondragend="handleNavDragEnd(event)"
+             class="flex items-center gap-3 p-3 bg-[#F9F9F9] rounded-2xl border transition-all cursor-move">
+          <span title="ลากเพื่อสลับตำแหน่ง" class="text-gray-400 hover:text-black select-none font-bold px-1 text-sm">⋮⋮</span>
+          <input type="text" id="admin-nav-label-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(item.label)}" class="w-1/3 p-2 bg-white rounded-xl text-xs font-bold border cursor-text">
+          <input type="text" id="admin-nav-url-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(item.url)}" class="w-2/3 p-2 bg-white rounded-xl text-xs border cursor-text">
+          <button onclick="removeNavMenu(${idx})" class="text-red-500 font-bold text-xs shrink-0">✕ ลบ</button>
         </div>
       `).join('');
     }
@@ -337,14 +469,19 @@
       syncNavMenuInputs();
       navMenuItems.push({ label: "NEW MENU", url: "#" });
       renderAdminNavMenu();
+      saveDraftToLocal();
     }
 
     function removeNavMenu(idx) {
       syncNavMenuInputs();
       navMenuItems.splice(idx, 1);
       renderAdminNavMenu();
+      saveDraftToLocal();
     }
 
+    // ==========================================
+    // หัวข้อ 4: SYSTEM COLLECTION (รองรับลากวางสลับ/แทรก)
+    // ==========================================
     function syncCardInputs() {
       systemCards.forEach((card, idx) => {
         const titleEl = document.getElementById(`admin-card-title-${idx}`);
@@ -360,18 +497,63 @@
       });
     }
 
+    function handleCardDragStart(event, idx) {
+      if (['INPUT', 'TEXTAREA', 'BUTTON'].includes(event.target.tagName)) {
+        event.preventDefault();
+        return;
+      }
+      draggedCardIndex = idx;
+      event.dataTransfer.effectAllowed = 'move';
+      event.currentTarget.classList.add('opacity-50');
+    }
+
+    function handleCardDragOver(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      event.currentTarget.classList.add('drag-over-target');
+    }
+
+    function handleCardDragLeave(event) {
+      event.currentTarget.classList.remove('drag-over-target');
+    }
+
+    function handleCardDrop(event, targetIdx) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('drag-over-target');
+      if (draggedCardIndex === null || draggedCardIndex === targetIdx) return;
+
+      syncCardInputs();
+      const [movedCard] = systemCards.splice(draggedCardIndex, 1);
+      systemCards.splice(targetIdx, 0, movedCard);
+      draggedCardIndex = null;
+
+      renderAdminCards();
+      saveDraftToLocal();
+    }
+
+    function handleCardDragEnd(event) {
+      event.currentTarget.classList.remove('opacity-50');
+      draggedCardIndex = null;
+    }
+
     function renderAdminCards() {
       document.getElementById('admin-cards-list').innerHTML = systemCards.map((card, idx) => `
-        <div class="p-4 bg-[#F9F9F9] rounded-2xl border space-y-2">
-          <div class="flex justify-between">
-            <span class="text-[10px] font-bold text-gray-400">Card #${idx + 1}</span>
+        <div draggable="true"
+             ondragstart="handleCardDragStart(event, ${idx})"
+             ondragover="handleCardDragOver(event)"
+             ondragleave="handleCardDragLeave(event)"
+             ondrop="handleCardDrop(event, ${idx})"
+             ondragend="handleCardDragEnd(event)"
+             class="p-4 bg-[#F9F9F9] rounded-2xl border space-y-2 transition-all cursor-move">
+          <div class="flex justify-between items-center">
+            <span title="ลากการ์ดเพื่อสลับตำแหน่ง" class="text-[10px] font-bold text-gray-400 select-none">⋮⋮ Card #${idx + 1}</span>
             <button onclick="removeCard(${idx})" class="text-red-500 font-bold text-xs">✕ ลบ</button>
           </div>
-          <input type="text" id="admin-card-title-${idx}" value="${escapeHtml(card.title)}" class="w-full p-2 bg-white rounded-lg text-xs font-bold border" placeholder="ชื่อการ์ด">
-          <textarea id="admin-card-desc-${idx}" rows="2" class="w-full p-2 bg-white rounded-lg text-xs border" placeholder="คำอธิบาย">${escapeHtml(card.desc)}</textarea>
-          <input type="text" id="admin-card-img-${idx}" value="${escapeHtml(card.imageUrl || '')}" class="w-full p-2 bg-white rounded-lg text-xs border" placeholder="ลิงก์รูป (Drive/URL)">
-          <input type="text" id="admin-card-icon-${idx}" value="${escapeHtml(card.iconText || '')}" class="w-full p-2 bg-white rounded-lg text-xs border" placeholder="ข้อความแทนรูป">
-          <input type="text" id="admin-card-link-${idx}" value="${escapeHtml(card.link || '')}" class="w-full p-2 bg-white rounded-lg text-xs border" placeholder="ลิงก์ระบบ (เชื่อมต่อ URL อื่น)">
+          <input type="text" id="admin-card-title-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(card.title)}" class="w-full p-2 bg-white rounded-lg text-xs font-bold border cursor-text" placeholder="ชื่อการ์ด">
+          <textarea id="admin-card-desc-${idx}" rows="2" oninput="saveDraftToLocal()" class="w-full p-2 bg-white rounded-lg text-xs border cursor-text" placeholder="คำอธิบาย">${escapeHtml(card.desc)}</textarea>
+          <input type="text" id="admin-card-img-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(card.imageUrl || '')}" class="w-full p-2 bg-white rounded-lg text-xs border cursor-text" placeholder="ลิงก์รูป (Drive/URL)">
+          <input type="text" id="admin-card-icon-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(card.iconText || '')}" class="w-full p-2 bg-white rounded-lg text-xs border cursor-text" placeholder="ข้อความแทนรูป">
+          <input type="text" id="admin-card-link-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(card.link || '')}" class="w-full p-2 bg-white rounded-lg text-xs border cursor-text" placeholder="ลิงก์ระบบ (เชื่อมต่อ URL อื่น)">
         </div>
       `).join('');
     }
@@ -380,14 +562,19 @@
       syncCardInputs();
       systemCards.push({ title: "New System", desc: "", imageUrl: "", iconText: "SYS", link: "" });
       renderAdminCards();
+      saveDraftToLocal();
     }
 
     function removeCard(idx) {
       syncCardInputs();
       systemCards.splice(idx, 1);
       renderAdminCards();
+      saveDraftToLocal();
     }
 
+    // ==========================================
+    // หัวข้อ 5: FOOTER
+    // ==========================================
     function syncFooterInputs() {
       footerLinks.forEach((item, idx) => {
         const labelEl = document.getElementById(`admin-footer-label-${idx}`);
@@ -400,8 +587,8 @@
     function renderAdminFooterLinks() {
       document.getElementById('admin-footer-links-list').innerHTML = footerLinks.map((item, idx) => `
         <div class="flex items-center gap-3 p-3 bg-[#F9F9F9] rounded-2xl border">
-          <input type="text" id="admin-footer-label-${idx}" value="${escapeHtml(item.label)}" class="w-1/3 p-2 bg-white rounded-xl text-xs font-bold border">
-          <input type="text" id="admin-footer-url-${idx}" value="${escapeHtml(item.url)}" class="w-2/3 p-2 bg-white rounded-xl text-xs border">
+          <input type="text" id="admin-footer-label-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(item.label)}" class="w-1/3 p-2 bg-white rounded-xl text-xs font-bold border">
+          <input type="text" id="admin-footer-url-${idx}" oninput="saveDraftToLocal()" value="${escapeHtml(item.url)}" class="w-2/3 p-2 bg-white rounded-xl text-xs border">
           <button onclick="removeFooterLink(${idx})" class="text-red-500 font-bold text-xs">✕ ลบ</button>
         </div>
       `).join('');
@@ -411,51 +598,32 @@
       syncFooterInputs();
       footerLinks.push({ label: "NEW LINK", url: "#" });
       renderAdminFooterLinks();
+      saveDraftToLocal();
     }
 
     function removeFooterLink(idx) {
       syncFooterInputs();
       footerLinks.splice(idx, 1);
       renderAdminFooterLinks();
+      saveDraftToLocal();
     }
 
+    // ==========================================
+    // บันทึกข้อมูลลง SUPABASE
+    // ==========================================
     async function saveAdminChanges(event) {
       const saveBtn = document.getElementById('btn-save-admin');
       const originalText = saveBtn ? saveBtn.innerHTML : '💾 บันทึกลง Supabase';
 
       try {
-        // 1. หน่วงเวลาและล็อกปุ่มกด
         if (saveBtn) {
           saveBtn.disabled = true;
           saveBtn.classList.add('opacity-50', 'cursor-not-allowed');
           saveBtn.innerHTML = '⏳ กำลังบันทึกข้อมูล...';
         }
 
-        // 2. Sync ค่าล่าสุดจาก Input ทั้งหมดก่อนส่งข้อมูล
-        syncNavMenuInputs();
-        syncCardInputs();
-        syncFooterInputs();
+        const updatedPayload = collectCurrentPayload();
 
-        const updatedPayload = {
-          logoUrl: document.getElementById('admin-logo-url').value || '',
-          logoText: document.getElementById('admin-logo-text').value || '',
-          navMenuItems: navMenuItems,
-          heroBigTitle: document.getElementById('admin-big-title').value || '',
-          heroSubtext: document.getElementById('admin-subtext').value || '',
-          heroImgUrl: document.getElementById('admin-img-url').value || '',
-          heroBottomTitle: document.getElementById('admin-bottom-title').value || '',
-          heroDescLeft: document.getElementById('admin-desc-left').value || '',
-          aboutTitle: document.getElementById('admin-about-title').value || '',
-          aboutSubtitle: document.getElementById('admin-about-subtitle').value || '',
-          aboutText1: document.getElementById('admin-about-1').value || '',
-          aboutText2: document.getElementById('admin-about-2').value || '',
-          systemTitle: document.getElementById('admin-system-title').value || '',
-          systemSubtitle: document.getElementById('admin-system-subtitle').value || '',
-          systemCards: systemCards,
-          footerLinks: footerLinks
-        };
-
-        // 3. ส่งข้อมูลและรอจนกว่า Supabase จะตอบกลับกระบวนการบันทึกสำเร็จ
         const { error } = await supabaseClient
           .from('site_config')
           .upsert({ id: 1, content: updatedPayload }, { onConflict: 'id' });
@@ -463,14 +631,13 @@
         if (error) {
           showAlertModal('เกิดข้อผิดพลาด!', 'เกิดปัญหาในการบันทึกข้อมูล: ' + error.message, false);
         } else {
-          // 4. เมื่อ Supabase ตอบรับความสำเร็จ โหลดข้อมูลใหม่ และแสดง Pop-up
-          await loadDataFromSupabase();
+          clearLocalDraft();
+          await loadDataFromSupabase(true);
           showAlertModal('บันทึกสำเร็จ!', 'อัปเดตข้อมูลลง Supabase เรียบร้อยแล้ว หน้าเว็บหลักจะแสดงผลข้อมูลใหม่ทันที', true);
         }
       } catch (err) {
         showAlertModal('เกิดข้อผิดพลาด!', 'เกิดปัญหาในการบันทึกข้อมูล: ' + (err.message || err), false);
       } finally {
-        // 5. คืนค่าปุ่มตามเดิม
         if (saveBtn) {
           saveBtn.disabled = false;
           saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
